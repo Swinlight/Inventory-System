@@ -6,12 +6,16 @@ function escapeHtml(s) {
 function statusClass(s) {
   return "st-" + String(s || "").toLowerCase().replace(/\s+/g, "-");
 }
+function peso(n) {
+  if (n === null || n === undefined || n === "") return "₱0.00";
+  return "₱" + Number(n).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
 
 /* Settings for each device type / page */
 const PAGES = {
   Laptop: { key: "laptops", one: "laptop", many: "laptops", icon: "💻" },
   Phone:  { key: "phones",  one: "phone",  many: "phones",  icon: "📱" },
-  DJI:    { key: "others",  one: "device", many: "devices", icon: "📹" }
+  DJI:    { key: "others",  one: "DJI device", many: "DJI devices", icon: "🚁" }
 };
 function iconFor(type) { return (PAGES[type] && PAGES[type].icon) || "📦"; }
 
@@ -117,7 +121,7 @@ function paintSidebar(active, items) {
     ${link("index.html", "Overview", null, "overview")}
     ${link("laptops.html", "Laptops", n("Laptop"), "laptops")}
     ${link("phones.html", "Phones", n("Phone"), "phones")}
-    ${link("others.html", "Others", n("Others"), "others")}
+    ${link("others.html", "Others (DJI)", n("DJI"), "others")}
   `;
 }
 
@@ -136,6 +140,7 @@ function paintHome() {
   const repair = count("Repair");
   const defective = count("Defective");
   const retired = count("Retired");
+  const totalValue = items.reduce((s, i) => s + (Number(i.purchaseAmount) || 0), 0);
 
   const dateEl = document.getElementById("todayDate");
   if (dateEl) dateEl.textContent = new Date().toLocaleDateString(undefined, { weekday: "long", year: "numeric", month: "long", day: "numeric" }).toUpperCase();
@@ -147,6 +152,7 @@ function paintHome() {
     <div class="card"><div class="card-l">Defective</div><div class="card-n">${defective}</div><div class="card-sub">Defective devices</div></div>
     <div class="card"><div class="card-l">For repair</div><div class="card-n">${repair}</div><div class="card-sub">Currently being repaired</div></div>
     <div class="card"><div class="card-l">Retired</div><div class="card-n">${retired}</div><div class="card-sub">Removed from service</div></div>
+    <div class="card"><div class="card-l">Total asset value <span class="chip">₱</span></div><div class="card-n">${peso(totalValue)}</div><div class="card-sub">Recorded purchase amounts</div></div>
   `;
 
   const segs = [
