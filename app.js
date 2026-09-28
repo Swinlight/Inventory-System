@@ -15,7 +15,7 @@ function peso(n) {
 const PAGES = {
   Laptop: { key: "laptops", one: "laptop", many: "laptops", icon: "💻" },
   Phone:  { key: "phones",  one: "phone",  many: "phones",  icon: "📱" },
-  DJI:    { key: "others",  one: "DJI device", many: "DJI devices", icon: "🚁" }
+  DJI:    { key: "others",  one: "device", many: "devices", icon: "📹" }
 };
 function iconFor(type) { return (PAGES[type] && PAGES[type].icon) || "📦"; }
 
@@ -121,7 +121,7 @@ function paintSidebar(active, items) {
     ${link("index.html", "Overview", null, "overview")}
     ${link("laptops.html", "Laptops", n("Laptop"), "laptops")}
     ${link("phones.html", "Phones", n("Phone"), "phones")}
-    ${link("others.html", "Others (DJI)", n("DJI"), "others")}
+    ${link("others.html", "Others", n("Others"), "others")}
   `;
 }
 
