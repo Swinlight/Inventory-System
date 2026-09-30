@@ -275,7 +275,16 @@ async function initInventoryPage(deviceType) {
       }
       return true;
     }).sort(byTag);
-
+    
+    const statusOptions = ["Available", "Assigned", "Repair", "Defective", "Retired"];
+    const currentValue = $("filterStatus").value;
+    $("filterStatus").innerHTML =
+      `<option value="">All statuses (${typeItems().length})</option>` +
+      statusOptions.map(s => {
+        const n = typeItems().filter(it => it.status === s).length;
+        return `<option value="${s}"${s === currentValue ? " selected" : ""}>${s} (${n})</option>`;
+      }).join("");
+    
     $("table").style.display = filtered.length ? "table" : "none";
     $("empty").style.display = filtered.length ? "none" : "block";
     $("empty").textContent = typeItems().length
