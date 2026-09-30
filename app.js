@@ -150,12 +150,23 @@ function paintHome() {
   if (dateEl) dateEl.textContent = new Date().toLocaleDateString(undefined, { weekday: "long", year: "numeric", month: "long", day: "numeric" }).toUpperCase();
 
   document.getElementById("cardgrid").innerHTML = `
-    <div class="card dark"><div class="card-l">Total assets</div><div class="card-n">${total}</div><div class="card-sub">Laptops, phones and DJI</div></div>
-    <a href="laptops.html" class="card card-link"><div class="card-l">Laptops</div><div class="card-n">${laptopCount}</div><div class="card-sub">View all →</div></a>
-    <a href="phones.html" class="card card-link"><div class="card-l">Phones</div><div class="card-n">${phoneCount}</div><div class="card-sub">View all →</div></a>
-    <a href="others.html" class="card card-link"><div class="card-l">Others (DJI)</div><div class="card-n">${djiCount}</div><div class="card-sub">View all →</div></a>
-    <div class="card"><div class="card-l">In use</div><div class="card-n">${inUse}</div><div class="card-sub">${total ? Math.round(inUse / total * 100) : 0}% of inventory</div></div>
-    <div class="card"><div class="card-l">Available</div><div class="card-n">${available}</div><div class="card-sub">Ready to assign</div></div>
+    <div class="group-label">Assets by type</div>
+    <div class="cardrow">
+      <div class="card dark"><div class="card-l">Total assets</div><div class="card-n">${total}</div><div class="card-sub">Laptops, phones and DJI</div></div>
+      <a href="laptops.html" class="card card-link"><div class="card-l">Laptops</div><div class="card-n">${laptopCount}</div><div class="card-sub">View all →</div></a>
+      <a href="phones.html" class="card card-link"><div class="card-l">Phones</div><div class="card-n">${phoneCount}</div><div class="card-sub">View all →</div></a>
+      <a href="others.html" class="card card-link"><div class="card-l">Others (DJI)</div><div class="card-n">${djiCount}</div><div class="card-sub">View all →</div></a>
+    </div>
+
+    <div class="group-label">Status</div>
+    <div class="cardrow">
+      <div class="card"><div class="card-l">In use</div><div class="card-n">${inUse}</div><div class="card-sub">${total ? Math.round(inUse / total * 100) : 0}% of inventory</div></div>
+      <div class="card"><div class="card-l">Available</div><div class="card-n">${available}</div><div class="card-sub">Ready to assign</div></div>
+      <div class="card"><div class="card-l">For repair</div><div class="card-n">${repair}</div><div class="card-sub">Currently being repaired</div></div>
+      <div class="card"><div class="card-l">Defective</div><div class="card-n">${defective}</div><div class="card-sub">Needs attention</div></div>
+      <div class="card"><div class="card-l">Retired</div><div class="card-n">${retired}</div><div class="card-sub">Removed from service</div></div>
+      <div class="card"><div class="card-l">Total value <span class="chip">₱</span></div><div class="card-n">${peso(totalValue)}</div><div class="card-sub">Recorded purchases</div></div>
+    </div>
   `;
 
   const segs = [
@@ -175,8 +186,7 @@ function paintHome() {
   document.getElementById("donut").style.background = total ? `conic-gradient(${gradParts.join(",")})` : "var(--border)";
   document.getElementById("donutTotal").textContent = total;
   document.getElementById("legend").innerHTML = segs.map(([label, n, color]) =>
-    `<div><span class="sw" style="background:${color}"></span><span class="lbl">${label}</span><span class="val">${n}</span></div>`).join("") +
-    `<div style="margin-top:0.5rem;padding-top:0.5rem;border-top:1px solid var(--border)"><span class="lbl">Total value</span><span class="val">${peso(totalValue)}</span></div>`;
+    `<div><span class="sw" style="background:${color}"></span><span class="lbl">${label}</span><span class="val">${n}</span></div>`).join("");
 
   const recent = items.slice().sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0)).slice(0, 5);
   document.getElementById("activity").innerHTML = recent.length ? recent.map(it =>
