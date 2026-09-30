@@ -141,12 +141,18 @@ function paintHome() {
   const defective = count("Defective");
   const retired = count("Retired");
   const totalValue = items.reduce((s, i) => s + (Number(i.purchaseAmount) || 0), 0);
+  const laptopCount = items.filter(i => i.type === "Laptop").length;
+  const phoneCount = items.filter(i => i.type === "Phone").length;
+  const djiCount = items.filter(i => i.type === "DJI").length;
 
   const dateEl = document.getElementById("todayDate");
   if (dateEl) dateEl.textContent = new Date().toLocaleDateString(undefined, { weekday: "long", year: "numeric", month: "long", day: "numeric" }).toUpperCase();
 
-  document.getElementById("cardgrid").innerHTML = `
+    document.getElementById("cardgrid").innerHTML = `
     <div class="card dark"><div class="card-l">Total assets</div><div class="card-n">${total}</div><div class="card-sub">Laptops, phones and DJI</div></div>
+    <div class="card"><div class="card-l">Laptops</div><div class="card-n">${laptopCount}</div><div class="card-sub">${total ? Math.round(laptopCount / total * 100) : 0}% of inventory</div></div>
+    <div class="card"><div class="card-l">Phones</div><div class="card-n">${phoneCount}</div><div class="card-sub">${total ? Math.round(phoneCount / total * 100) : 0}% of inventory</div></div>
+    <div class="card"><div class="card-l">Others (DJI)</div><div class="card-n">${djiCount}</div><div class="card-sub">${total ? Math.round(djiCount / total * 100) : 0}% of inventory</div></div>
     <div class="card"><div class="card-l">In use</div><div class="card-n">${inUse}</div><div class="card-sub">${total ? Math.round(inUse / total * 100) : 0}% of inventory</div></div>
     <div class="card"><div class="card-l">Available</div><div class="card-n">${available}</div><div class="card-sub">Ready to assign</div></div>
     <div class="card"><div class="card-l">Defective</div><div class="card-n">${defective}</div><div class="card-sub">Defective devices</div></div>
