@@ -142,9 +142,15 @@ function paintHome() {
   const retired = count("Retired");
   const totalValue = items.reduce((s, i) => s + (Number(i.purchaseAmount) || 0), 0);
 
-  const laptopCount = items.filter(i => i.type === "Laptop").length;
-  const phoneCount = items.filter(i => i.type === "Phone").length;
-  const djiCount = items.filter(i => i.type === "DJI").length;
+  const laptops = items.filter(i => i.type === "Laptop");
+  const phones = items.filter(i => i.type === "Phone");
+  const djis = items.filter(i => i.type === "DJI");
+  const laptopCount = laptops.length;
+  const phoneCount = phones.length;
+  const djiCount = djis.length;
+  const laptopAvailable = laptops.filter(i => category(i) === "Available").length;
+  const phoneAvailable = phones.filter(i => category(i) === "Available").length;
+  const djiAvailable = djis.filter(i => category(i) === "Available").length;
 
   const dateEl = document.getElementById("todayDate");
   if (dateEl) dateEl.textContent = new Date().toLocaleDateString(undefined, { weekday: "long", year: "numeric", month: "long", day: "numeric" }).toUpperCase();
@@ -153,15 +159,14 @@ function paintHome() {
     <div class="group-label">Assets by type</div>
     <div class="cardrow">
       <div class="card dark"><div class="card-l">Total assets</div><div class="card-n">${total}</div><div class="card-sub">Laptops, phones and DJI</div></div>
-      <a href="laptops.html" class="card card-link"><div class="card-l">Laptops</div><div class="card-n">${laptopCount}</div><div class="card-sub">${total ? Math.round(laptopCount / total * 100) : 0}% of inventory</div></a>
-      <a href="phones.html" class="card card-link"><div class="card-l">Phones</div><div class="card-n">${phoneCount}</div><div class="card-sub">${total ? Math.round(phoneCount / total * 100) : 0}% of inventory</div></a>
-      <a href="others.html" class="card card-link"><div class="card-l">Others (DJI)</div><div class="card-n">${djiCount}</div><div class="card-sub">${total ? Math.round(djiCount / total * 100) : 0}% of inventory</div></a>
+      <a href="laptops.html?status=Available" class="card card-link"><div class="card-l">Laptops</div><div class="card-n">${laptopCount}</div><div class="card-sub">${laptopAvailable} available →</div></a>
+      <a href="phones.html?status=Available" class="card card-link"><div class="card-l">Phones</div><div class="card-n">${phoneCount}</div><div class="card-sub">${phoneAvailable} available →</div></a>
+      <a href="others.html?status=Available" class="card card-link"><div class="card-l">Others (DJI)</div><div class="card-n">${djiCount}</div><div class="card-sub">${djiAvailable} available →</div></a>
     </div>
 
     <div class="group-label">Status</div>
     <div class="cardrow">
       <div class="card"><div class="card-l">In use</div><div class="card-n">${inUse}</div><div class="card-sub">${total ? Math.round(inUse / total * 100) : 0}% of inventory</div></div>
-      <div class="card"><div class="card-l">Available</div><div class="card-n">${available}</div><div class="card-sub">Ready to assign</div></div>
       <div class="card"><div class="card-l">Defective</div><div class="card-n">${defective}</div><div class="card-sub">Defective devices</div></div>
       <div class="card"><div class="card-l">For repair</div><div class="card-n">${repair}</div><div class="card-sub">Currently being repaired</div></div>
       <div class="card"><div class="card-l">Retired</div><div class="card-n">${retired}</div><div class="card-sub">Removed from service</div></div>
@@ -221,6 +226,8 @@ function paintRecentTable() {
 
 async function renderHome() {
   paintSidebar("overview", []); // show the menu right away
+    const urlStatus = new URLSearchParams(window.location.search).get("status");
+  if (urlStatus) $("filterStatus").dataset.preset = urlStatus;
 
   document.querySelectorAll(".tabs-pill button").forEach(b => b.onclick = () => {
     document.querySelectorAll(".tabs-pill button").forEach(x => x.classList.remove("active"));
@@ -276,8 +283,10 @@ async function initInventoryPage(deviceType) {
       return true;
     }).sort(byTag);
     
-    const statusOptions = ["Available", "Assigned", "Repair", "Defective", "Retired"];
-    const currentValue = $("filterStatus").value;
+        const statusOptions = ["Available", "Assigned", "Repair", "Defective", "Retired"];
+    const preset = $("filterStatus").dataset.preset;
+    const currentValue = preset !== undefined ? preset : $("filterStatus").value;
+    delete $("filterStatus").dataset.preset;
     $("filterStatus").innerHTML =
       `<option value="">All statuses (${typeItems().length})</option>` +
       statusOptions.map(s => {
