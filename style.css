@@ -118,15 +118,29 @@ h1, h2 { letter-spacing: -0.02em; }
 .card {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 0.7rem;
-  padding: 0.75rem 0.9rem;
+  border-radius: 0.75rem;
+  padding: 0.8rem 0.9rem;
 }
 .card.dark { background: var(--sidebar); border-color: var(--sidebar); color: #fff; }
 .card.dark .card-l, .card.dark .card-sub { color: #94A1AD; }
-.card-l { font-size: 0.72rem; color: var(--text-dim); margin-bottom: 0.35rem; display: flex; justify-content: space-between; align-items: center; }
-.chip { width: 1.1rem; height: 1.1rem; border-radius: 0.35rem; display: inline-flex; align-items: center; justify-content: center; font-size: 0.6rem; background: var(--bg); color: var(--text-dim); }
+
+.stat-top { display: flex; align-items: center; gap: 0.45rem; margin-bottom: 0.5rem; }
+.stat-icon {
+  width: 1.5rem; height: 1.5rem; border-radius: 0.5rem; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.8rem; line-height: 1;
+}
+.ic-total     { background: #E9EBF5; }
+.ic-assigned  { background: #DCEDFB; }
+.ic-stock     { background: #DDF5E8; }
+.ic-repair    { background: #FBF0D2; }
+.ic-defective { background: #FBDFE1; }
+.ic-retired   { background: #ECEDEE; }
+.card.dark .stat-icon { background: rgba(255,255,255,0.12); }
+
+.card-l { font-size: 0.72rem; color: var(--text-dim); font-weight: 500; }
 .card-n { font-size: 1.35rem; font-weight: 700; letter-spacing: -0.01em; }
-.card-sub { font-size: 0.66rem; color: var(--text-dim); margin-top: 0.25rem; }
+.card-sub { font-size: 0.66rem; color: var(--text-dim); margin-top: 0.2rem; }
 a.card-link { display: block; transition: transform 0.12s ease, box-shadow 0.12s ease; }
 a.card-link:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.06); border-color: var(--stock); }
 /* ---------- Panels ---------- */
